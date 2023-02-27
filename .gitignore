@@ -1,2 +1,4 @@
 profile.out
 test.ged
+dist/*
+!dist/.keep
