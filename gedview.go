@@ -18,6 +18,24 @@ type Node struct {
 	parent *Node
 }
 
+// FindByType searches forward through a subtree and returns all found nodes
+// as a slice to be further worked with.
+func (n *Node) FindByType(t string) NodeCollection {
+	c := NodeCollection{}
+
+	if n.Type == t {
+		c = append(c, n)
+	}
+
+	for _, n := range n.Children {
+		c = append(c, n.FindByType(t)...)
+	}
+
+	return c
+}
+
+type NodeCollection []*Node
+
 // CreateAST creates based off of a GEDCOM formated file a AST which can be
 // used to interpret the structure and ultimately work with the data more
 // appropriately.

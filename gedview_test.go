@@ -10,8 +10,7 @@ func Test_CreateAST(t *testing.T) {
 		c := strings.NewReader(`
 0 HEAD
 1 GEDC
-2 VERS 5.5.5
-		`)
+2 VERS 5.5.5`)
 
 		ast, err := CreateAST(c)
 
@@ -29,8 +28,7 @@ func Test_CreateAST(t *testing.T) {
 0 HEAD
 1 GEDC
 2 VERS 5.5.5
-2 FORM LINEAGE-LINKED
-			`)
+2 FORM LINEAGE-LINKED`)
 
 		ast, err := CreateAST(c)
 
@@ -51,8 +49,7 @@ func Test_CreateAST(t *testing.T) {
 2 VERS 5.5.5
 2 FORM LINEAGE-LINKED
 3 VERS 5.5.5
-1 CHAR UTF-8
-			`)
+1 CHAR UTF-8`)
 
 		ast, err := CreateAST(c)
 
@@ -64,4 +61,38 @@ func Test_CreateAST(t *testing.T) {
 			t.Error("mapping didn't resolve correctly")
 		}
 	})
+}
+
+func Test_FindByType(t *testing.T) {
+	ast := &Node{
+		Type: "A",
+		Children: []*Node{
+			&Node{
+				Type: "A",
+				Children: []*Node{
+					&Node{
+						Type: "A",
+					},
+				},
+			},
+			&Node{
+				Type: "B",
+				Children: []*Node{
+					&Node{
+						Type: "C",
+						Children: []*Node{
+							&Node{
+								Type: "A",
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	c := ast.FindByType("A")
+	if len(c) < 4 {
+		t.Errorf("expected to find 4 nodes, got %v", len(c))
+	}
 }
