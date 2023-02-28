@@ -18,17 +18,26 @@ type Node struct {
 	parent *Node
 }
 
-// FindByType searches forward through a subtree and returns all found nodes
-// as a slice to be further worked with.
+type CheckFunc func(n *Node) bool
+
+// FindByType searches for nodes by type
 func (n *Node) FindByType(t string) NodeCollection {
+	return n.FindBy(func(n *Node) bool {
+		return n.Type == t
+	})
+}
+
+// FindBy searches forward through a subtree and returns all found nodes
+// as a slice to be further worked with.
+func (n *Node) FindBy(f CheckFunc) NodeCollection {
 	c := NodeCollection{}
 
-	if n.Type == t {
+	if f(n) {
 		c = append(c, n)
 	}
 
 	for _, n := range n.Children {
-		c = append(c, n.FindByType(t)...)
+		c = append(c, n.FindBy(f)...)
 	}
 
 	return c
